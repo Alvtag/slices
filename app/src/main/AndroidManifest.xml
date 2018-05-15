@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.example.tsd068.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,7 +19,7 @@
 
         <provider
             android:authorities="com.android.example.slicecodelab"
-            android:name=".NewsSliceProvider"
+            android:name=".SliceProvider"
             android:exported="true">
         </provider>
     </application>

@@ -10,9 +10,9 @@ import android.net.Uri
  * Created by tsd068 on 2018-05-15.
  */
 
-class NewsSliceProvider:SliceProvider(){
+class SliceProvider : SliceProvider(), SliceProviderInterface {
     override fun onCreate(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return true
     }
 
 
