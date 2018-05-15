@@ -16,6 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="com.android.example.slicecodelab"
+            android:name=".NewsSliceProvider"
+            android:exported="true">
+        </provider>
     </application>
 
 </manifest>
