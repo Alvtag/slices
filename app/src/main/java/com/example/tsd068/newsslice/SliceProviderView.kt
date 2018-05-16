@@ -21,7 +21,7 @@ class SliceProviderView{
     //take in a uri and returns a slice. or null.
     fun onBindSlice(sliceUri: Uri,listBuilder: ListBuilder, rowBuilder:ListBuilder.RowBuilder, sliceAction: SliceAction): Slice? {
         when (sliceUri.path) {
-            "/temperature" -> {
+            "/topnews" -> {
                 rowBuilder.setTitle("news")
                 rowBuilder.setPrimaryAction(sliceAction)
                 listBuilder.addRow(rowBuilder)
@@ -30,7 +30,6 @@ class SliceProviderView{
                 return listBuilder.build()
             }
         }
-
         return null
     }
 }

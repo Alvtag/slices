@@ -25,10 +25,27 @@ class SliceProviderViewTest {
 
     }
 
-
     @Test
     fun onBindSlice() {
-        /* Given */
+        /* Given a good path*/
+        val slice = Mockito.mock(Slice::class.java)
+        val uri = Mockito.mock(Uri::class.java)
+        `when`(uri.path).then { "/topnews" }
+        val action = Mockito.mock(SliceAction::class.java)
+        val listBuilder = Mockito.mock(ListBuilder::class.java)
+        `when`(listBuilder.build()).then { slice }
+        val rowBuilder = Mockito.mock(ListBuilder.RowBuilder::class.java)
+
+        /* When null*/
+        val result = viewUnderTest.onBindSlice(uri, listBuilder, rowBuilder, action)
+
+        /* Then gimme a slice*/
+        assertEquals(slice, result)
+    }
+
+    @Test
+    fun onBindSlice_badpath() {
+        /* Given a bad path*/
         val slice = Mockito.mock(Slice::class.java)
         val uri = Mockito.mock(Uri::class.java)
         `when`(uri.path).then { "/temperature" }
@@ -37,13 +54,11 @@ class SliceProviderViewTest {
         `when`(listBuilder.build()).then { slice }
         val rowBuilder = Mockito.mock(ListBuilder.RowBuilder::class.java)
 
-
-
-        /* When */
+        /* When onBindSlice*/
         val result = viewUnderTest.onBindSlice(uri, listBuilder, rowBuilder, action)
 
-        /* Then */
-        assertEquals(slice, result)
+        /* Then null*/
+        assertEquals(null, result)
     }
 
 
