@@ -18,6 +18,8 @@ class SliceProviderPresenter(val view:SliceProviderView){
                 .subscribe ({
                     result ->
                     Logg.instance.d("Result", "There are ${result.articles.size} stories in this list")
+
+                    view.updateStoryList(result.articles)
                 }, { error ->
                     error.printStackTrace()
                 })

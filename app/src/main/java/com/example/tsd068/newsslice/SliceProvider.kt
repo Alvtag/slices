@@ -1,6 +1,7 @@
 package com.example.tsd068.newsslice
 
 import android.app.PendingIntent
+import android.content.Context
 import androidx.slice.Slice
 import androidx.slice.SliceProvider
 import androidx.slice.builders.ListBuilder
@@ -8,6 +9,7 @@ import androidx.slice.builders.SliceAction
 import android.net.Uri
 import android.content.Intent
 import androidx.core.graphics.drawable.IconCompat
+import com.example.tsd068.Logg
 import com.example.tsd068.MainActivity
 
 class SliceProvider : SliceProvider(), SliceProviderInterface {
@@ -18,7 +20,8 @@ class SliceProvider : SliceProvider(), SliceProviderInterface {
     }
 
     override fun onBindSlice(sliceUri: Uri?): Slice {
-
+        Logg.instance.d("ALVTAG", "SliceProvider onBindSlice")
+        Logg.instance.d("ALVTAG", "SliceProvider : sliceUri.path:" + sliceUri?.path)
         sliceUri?.let {
             // Set the primary action; this will activate when the row is tapped
             val intent = Intent(context, MainActivity::class.java)
@@ -41,4 +44,21 @@ class SliceProvider : SliceProvider(), SliceProviderInterface {
     override fun rowBuilder(listBuilder: ListBuilder): ListBuilder.RowBuilder {
         return ListBuilder.RowBuilder(listBuilder)
     }
+
+    override fun uriBuilder(): Uri.Builder {
+        return Uri.Builder()
+    }
+
+    override fun context(): Context {
+        return context
+    }
+
+     fun getChangeTempIntent(value: Int): PendingIntent {
+        val intent = Intent(MyBroadcastReceiver.ACTION_CHANGE_TEMP)
+        intent.setClass(context, MyBroadcastReceiver::class.java!!)
+        intent.putExtra(MyBroadcastReceiver.EXTRA_TEMP_VALUE, value)
+        return PendingIntent.getBroadcast(context,0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
 }

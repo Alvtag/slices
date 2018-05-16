@@ -1,5 +1,6 @@
 package com.example.tsd068.newsslice
 
+import android.content.Context
 import android.net.Uri
 import androidx.slice.builders.ListBuilder
 
@@ -10,4 +11,8 @@ interface SliceProviderInterface {
     fun listBuilder(sliceUri: Uri?): ListBuilder
 
     fun rowBuilder(listBuilder: ListBuilder): ListBuilder.RowBuilder
+
+    fun uriBuilder():Uri.Builder
+
+    fun context():Context
 }

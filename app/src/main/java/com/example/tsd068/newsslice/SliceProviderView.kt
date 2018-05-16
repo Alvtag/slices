@@ -13,19 +13,11 @@ import com.example.tsd068.model.NewsStory
 
 class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
 
-    val presenter = SliceProviderPresenter(this)
+    var presenter = SliceProviderPresenter(this)
     companion object Test {
-        lateinit var newsList: List<NewsStory>
-
-        fun updateStoryList(context: Context, freshNewsList: List<NewsStory>, urlBuilder: Uri.Builder) {
-            newsList = freshNewsList
-            // Should notify the URI to let any slices that might be displaying know to update.
-            val uri = getUri(context, "/topnews", urlBuilder)
-            context.contentResolver.notifyChange(uri, null)
-        }
+        var newsList: List<NewsStory>? = null
 
         fun getUri(context: Context, path: String, uriBuilder: Uri.Builder): Uri {
-
             return uriBuilder
                     .scheme(ContentResolver.SCHEME_CONTENT)
                     .authority(context.packageName)
@@ -34,9 +26,21 @@ class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
         }
     }
 
+    fun updateStoryList(  freshNewsList: List<NewsStory> ) {
+        Logg.instance.d("ALVTAG", "SliceProviderView.updateStoryList")
+        newsList = freshNewsList
+        val context = sliceProviderInterface.context()
+        // Should notify the URI to let any slices that might be displaying know to update.
+        val uri = getUri(context, "/topnews", sliceProviderInterface.uriBuilder())
+
+        context.contentResolver.notifyChange(uri, null)
+
+    }
+
     //take in a uri and returns a slice. or null.
     fun onBindSlice(sliceUri: Uri, sliceAction: SliceAction, icon: IconCompat): Slice? {
         Logg.instance.d("ALVTAG", "sliceUri.path:" + sliceUri.path)
+        Logg.instance.d("ALVTAG", "onBindSlice articles size:" + newsList?.size?:"empty")
         when (sliceUri.path) {
             "/topnews" -> {
 
@@ -45,7 +49,7 @@ class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
 
                 val titleRowBuilder = sliceProviderInterface.rowBuilder(listBuilder)
                 titleRowBuilder.setTitleItem(icon, SliceHints.ICON_IMAGE)
-                titleRowBuilder.setTitle("ABC News")
+                titleRowBuilder.setTitle("ABC News+"+System.currentTimeMillis())
                 titleRowBuilder.setPrimaryAction(sliceAction)
                 listBuilder.addRow(titleRowBuilder)
 
