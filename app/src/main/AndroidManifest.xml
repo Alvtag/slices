@@ -18,7 +18,7 @@
         </activity>
 
         <provider
-            android:authorities="com.android.example.slicecodelab"
+            android:authorities="com.example.tsd068.newsslice"
             android:name=".SliceProvider"
             android:exported="true">
         </provider>
