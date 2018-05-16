@@ -1,43 +1,53 @@
 package com.example.tsd068.newsslice
 
+import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
+import androidx.core.graphics.drawable.IconCompat
 import androidx.slice.Slice
 import androidx.slice.builders.ListBuilder
 import androidx.slice.builders.SliceAction
+import com.example.tsd068.Logg
+import com.example.tsd068.model.NewsStory
 import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.Before
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.verify
 
-/**
- * Created by tsd068 on 2018-05-15.
- */
 class SliceProviderViewTest {
 
+    val slice = Mockito.mock(Slice::class.java)
     val newsSliceProviderInterface = Mockito.mock(SliceProviderInterface::class.java)
-
     val viewUnderTest = SliceProviderView(newsSliceProviderInterface)
+    val icon = Mockito.mock(IconCompat::class.java)
+    val action = Mockito.mock(SliceAction::class.java)
+    val listBuilder = Mockito.mock(ListBuilder::class.java)
+    val rowBuilder = Mockito.mock(ListBuilder.RowBuilder::class.java)
+    lateinit var uri:Uri
 
     @Before
     fun setUp() {
+        Logg.instance = Mockito.mock(Logg::class.java)
 
+        uri = Mockito.mock(Uri::class.java)
+        `when`(uri.path).then { "/topnews" }
+        `when`(listBuilder.build()).then { slice }
+
+        `when`(newsSliceProviderInterface.listBuilder(uri)).thenReturn(listBuilder)
+        `when`(newsSliceProviderInterface.rowBuilder(listBuilder)).thenReturn(rowBuilder)
     }
 
     @Test
     fun onBindSlice() {
         /* Given a good path*/
-        val slice = Mockito.mock(Slice::class.java)
-        val uri = Mockito.mock(Uri::class.java)
-        `when`(uri.path).then { "/topnews" }
-        val action = Mockito.mock(SliceAction::class.java)
-        val listBuilder = Mockito.mock(ListBuilder::class.java)
         `when`(listBuilder.build()).then { slice }
         val rowBuilder = Mockito.mock(ListBuilder.RowBuilder::class.java)
 
         /* When null*/
-        val result = viewUnderTest.onBindSlice(uri, listBuilder, rowBuilder, action)
+        val result = viewUnderTest.onBindSlice(uri, action, icon)
 
         /* Then gimme a slice*/
         assertEquals(slice, result)
@@ -46,20 +56,57 @@ class SliceProviderViewTest {
     @Test
     fun onBindSlice_badpath() {
         /* Given a bad path*/
-        val slice = Mockito.mock(Slice::class.java)
-        val uri = Mockito.mock(Uri::class.java)
         `when`(uri.path).then { "/temperature" }
         val action = Mockito.mock(SliceAction::class.java)
-        val listBuilder = Mockito.mock(ListBuilder::class.java)
-        `when`(listBuilder.build()).then { slice }
-        val rowBuilder = Mockito.mock(ListBuilder.RowBuilder::class.java)
 
         /* When onBindSlice*/
-        val result = viewUnderTest.onBindSlice(uri, listBuilder, rowBuilder, action)
+        val result = viewUnderTest.onBindSlice(uri, action, icon)
 
         /* Then null*/
         assertEquals(null, result)
     }
 
+    @Test
+    fun getUri() {
+        /* Given*/
+        val context = Mockito.mock(Context::class.java)
+        val uriBuilder = Mockito.mock(Uri.Builder::class.java)
+        val path = "/fooPath"
+        `when`(uriBuilder.build()).then { uri }
+        `when`(uriBuilder.scheme(ContentResolver.SCHEME_CONTENT)).thenReturn(uriBuilder)
+        `when`(uriBuilder.authority(context.packageName)).thenReturn(uriBuilder)
+        `when`(uriBuilder.appendPath(path)).thenReturn(uriBuilder)
 
+        /* When*/
+        val result = SliceProviderView.getUri(context, path, uriBuilder)
+
+        /* Then*/
+        assertEquals(uri, result)
+        verify(uriBuilder).scheme(ContentResolver.SCHEME_CONTENT)
+        verify(uriBuilder).authority(context.packageName)
+        verify(uriBuilder).appendPath(path)
+    }
+
+    @Test
+    fun updateStoryList() {
+        /* Given*/
+        val storyList = ArrayList<NewsStory>()
+        val context = Mockito.mock(Context::class.java)
+        val contentResolver = Mockito.mock(ContentResolver::class.java)
+        val uri = Mockito.mock(Uri::class.java)
+        val uriBuilder = Mockito.mock(Uri.Builder::class.java)
+        val path = "/topnews"
+        `when`(uriBuilder.build()).then { uri }
+        `when`(uriBuilder.scheme(ContentResolver.SCHEME_CONTENT)).thenReturn(uriBuilder)
+        `when`(uriBuilder.authority(context.packageName)).thenReturn(uriBuilder)
+        `when`(uriBuilder.appendPath(path)).thenReturn(uriBuilder)
+        `when`(context.contentResolver).thenReturn(contentResolver)
+
+        /* When*/
+        SliceProviderView.updateStoryList(context, storyList, uriBuilder)
+
+        /* Then*/
+        verify(contentResolver).notifyChange(uri, null)
+        assertEquals(storyList, SliceProviderView.newsList)
+    }
 }
