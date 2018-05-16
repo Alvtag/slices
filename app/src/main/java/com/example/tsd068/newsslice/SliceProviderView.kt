@@ -3,10 +3,8 @@ package com.example.tsd068.newsslice
 import android.content.ContentResolver
 import android.content.Context
 import androidx.slice.Slice
-import androidx.slice.builders.ListBuilder
 import androidx.slice.builders.SliceAction
 import android.net.Uri
-import android.util.Log
 import androidx.core.graphics.drawable.IconCompat
 import androidx.slice.core.SliceHints
 import com.example.tsd068.Logg
@@ -15,6 +13,7 @@ import com.example.tsd068.model.NewsStory
 
 class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
 
+    val presenter = SliceProviderPresenter(this)
     companion object Test {
         lateinit var newsList: List<NewsStory>
 
@@ -58,7 +57,9 @@ class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
                 listBuilder.addRow(itemRowBuilder)
 
                 val slice = listBuilder.build()
-                //TODO("kick off network task to fetch stories")
+                Logg.instance.d("ALVTAG", "getting articles")
+                presenter.fetchArticles()
+
                 // Build the slice
                 return slice
             }

@@ -31,6 +31,13 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation ('androidx.slice:slice-core:1.0.0-alpha1')
     implementation ('androidx.slice:slice-builders:1.0.0-alpha1' )
+    // retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.3.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
+    // rxandroid
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
+
     testImplementation 'org.mockito:mockito-core:2.8.9'
     testImplementation 'junit:junit:4.12'
 
