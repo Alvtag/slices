@@ -9,7 +9,6 @@ import androidx.slice.builders.SliceAction
 import android.net.Uri
 import android.content.Intent
 import androidx.core.graphics.drawable.IconCompat
-import androidx.slice.SliceSpecs
 import com.example.tsd068.MainActivity
 
 /**
@@ -32,7 +31,8 @@ class SliceProvider : SliceProvider(), SliceProviderInterface {
             val rowBuilder = ListBuilder.RowBuilder(listBuilder)
             // Set the primary action; this will activate when the row is tapped
             val intent = Intent(getContext(), MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(getContext(), sliceUri?.hashCode() ?: -1,
+            val pendingIntent = PendingIntent.getActivity(getContext(),
+                    sliceUri.hashCode() ?: -1,
                     intent, 0)
             val openTempActivity = SliceAction(pendingIntent,
                     IconCompat.createWithResource(context, android.R.drawable.btn_default).toIcon(),
