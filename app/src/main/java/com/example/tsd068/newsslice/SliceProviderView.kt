@@ -3,8 +3,11 @@ package com.example.tsd068.newsslice
 /**
  * Created by tsd068 on 2018-05-15.
  */
-import android.app.slice.Slice
+import androidx.slice.Slice
+import androidx.slice.builders.ListBuilder
+import androidx.slice.builders.SliceAction
 import android.net.Uri
+
 
 class SliceProviderView{
 
@@ -16,8 +19,17 @@ class SliceProviderView{
 
 
     //take in a uri and returns a slice. or null.
-    fun onBindSlice(sliceUri: Uri): Slice? {
+    fun onBindSlice(sliceUri: Uri,listBuilder: ListBuilder, rowBuilder:ListBuilder.RowBuilder, sliceAction: SliceAction): Slice? {
+        when (sliceUri.path) {
+            "/temperature" -> {
+                rowBuilder.setTitle("news")
+                rowBuilder.setPrimaryAction(sliceAction)
+                listBuilder.addRow(rowBuilder)
 
+                // Build the slice
+                return listBuilder.build()
+            }
+        }
 
         return null
     }

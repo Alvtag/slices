@@ -1,7 +1,9 @@
 package com.example.tsd068.newsslice
 
-import android.app.slice.Slice
 import android.net.Uri
+import androidx.slice.Slice
+import androidx.slice.builders.ListBuilder
+import androidx.slice.builders.SliceAction
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -27,39 +29,22 @@ class SliceProviderViewTest {
     @Test
     fun onBindSlice() {
         /* Given */
-
         val slice = Mockito.mock(Slice::class.java)
-
-
         val uri = Mockito.mock(Uri::class.java)
-        `when`(uri.path)
-                .then { "content://com.android.example.slicecodelab/temperature" }
+        `when`(uri.path).then { "/temperature" }
+        val action = Mockito.mock(SliceAction::class.java)
+        val listBuilder = Mockito.mock(ListBuilder::class.java)
+        `when`(listBuilder.build()).then { slice }
+        val rowBuilder = Mockito.mock(ListBuilder.RowBuilder::class.java)
+
 
 
         /* When */
-        val result = viewUnderTest.onBindSlice(uri)
+        val result = viewUnderTest.onBindSlice(uri, listBuilder, rowBuilder, action)
 
         /* Then */
         assertEquals(slice, result)
     }
 
-    @Test
-    fun onBindSlice_badUri() {
-        /* Given */
-
-        val slice = Mockito.mock(Slice::class.java)
-
-
-        val uri = Mockito.mock(Uri::class.java)
-        `when`(uri.path)
-                .then { "content://com.android.example.slicecodelab/location" }
-
-
-        /* When */
-        val result = viewUnderTest.onBindSlice(uri)
-
-        /* Then */
-        assertEquals(null, result)
-    }
 
 }
