@@ -26,15 +26,15 @@ class SliceProvider : SliceProvider(), SliceProviderInterface {
             // Set the primary action; this will activate when the row is tapped
             val intent = Intent(context, MainActivity::class.java)
             val pendingIntent = PendingIntent.getActivity(getContext(),
-                    sliceUri.hashCode() ?: -1,
+                    sliceUri.hashCode(),
                     intent, 0)
             val openTempActivity = SliceAction(pendingIntent,
                     IconCompat.createWithResource(context, android.R.drawable.btn_default),
                     "Temperature controls")
-            val icon = IconCompat.createWithResource(context, R.drawable.newspaper_512);
+            val icon = IconCompat.createWithResource(context, R.drawable.newspaper_512)
             return sliceProviderView.onBindSlice(sliceUri, openTempActivity, icon)!!
         }
-        throw IllegalArgumentException("sliceUri cannot be null!");
+        throw IllegalArgumentException("sliceUri cannot be null!")
     }
 
     override fun listBuilder(sliceUri: Uri?): ListBuilder {
@@ -55,7 +55,7 @@ class SliceProvider : SliceProvider(), SliceProviderInterface {
 
      fun getChangeTempIntent(value: Int): PendingIntent {
         val intent = Intent(MyBroadcastReceiver.ACTION_CHANGE_TEMP)
-        intent.setClass(context, MyBroadcastReceiver::class.java!!)
+        intent.setClass(context, MyBroadcastReceiver::class.java)
         intent.putExtra(MyBroadcastReceiver.EXTRA_TEMP_VALUE, value)
         return PendingIntent.getBroadcast(context,0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
