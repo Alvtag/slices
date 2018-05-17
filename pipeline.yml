@@ -1,0 +1,31 @@
+resources:
+  - name: git-demo-slices-repo
+    type: git
+    source:
+      uri: git@github.com:Alvtag/slices
+      branch: master
+      private_key: ((github-private-key))
+
+
+
+jobs:
+
+  - name: test-demo-slices
+
+    plan:
+
+      - get: git-demo-slices-repo
+
+        trigger: true
+
+      - task: test
+
+        input_mapping:
+
+          demo-slices-repo: git-demo-slices-repo
+
+        file: git-demo-slices-repo/test.yml
+
+        params:
+
+          NODE_ENV: test
