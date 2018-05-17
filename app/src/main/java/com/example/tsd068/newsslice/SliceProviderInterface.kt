@@ -2,6 +2,7 @@ package com.example.tsd068.newsslice
 
 import android.content.Context
 import android.net.Uri
+import androidx.core.graphics.drawable.IconCompat
 import androidx.slice.builders.ListBuilder
 
 /**
@@ -15,4 +16,8 @@ interface SliceProviderInterface {
     fun uriBuilder():Uri.Builder
 
     fun context():Context
+
+    fun appIcon():IconCompat
+
+    fun rowIcon():IconCompat
 }

@@ -14,8 +14,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import org.junit.Before
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 
 class SliceProviderViewTest {
     val slice = Mockito.mock(Slice::class.java)
@@ -48,15 +47,38 @@ class SliceProviderViewTest {
 
     @Test
     fun onBindSlice() {
-        /* Given a good path*/
-        `when`(listBuilder.build()).then { slice }
-        val rowBuilder = Mockito.mock(ListBuilder.RowBuilder::class.java)
+        /* Given a good path and a list*/
+        val story1 = mock(NewsStory::class.java)
+        val story2 = mock(NewsStory::class.java)
+        val story3 = mock(NewsStory::class.java)
+        val stories = ArrayList<NewsStory>()
+
+        val titleRowBuilder = mock(ListBuilder.RowBuilder::class.java)
+        val row1Builder = mock(ListBuilder.RowBuilder::class.java)
+        val row2Builder = mock(ListBuilder.RowBuilder::class.java)
+        val row3Builder = mock(ListBuilder.RowBuilder::class.java)
+
+        `when`(newsSliceProviderInterface.rowBuilder(listBuilder))
+                .thenReturn(titleRowBuilder)
+                .thenReturn(row1Builder)
+                .thenReturn(row2Builder)
+                .thenReturn(row3Builder)
+
+        stories.add(story1)
+        stories.add(story2)
+        stories.add(story3)
+        SliceProviderView.newsList = stories
+        `when`(listBuilder.build()).thenReturn(slice)
 
         /* When null*/
-        val result = viewUnderTest.onBindSlice(uri, action, icon)
+        val result = viewUnderTest.onBindSlice(uri, action)
 
         /* Then gimme a slice*/
         assertEquals(slice, result)
+        verify(listBuilder).addRow(titleRowBuilder)
+        verify(listBuilder).addRow(row1Builder)
+        verify(listBuilder).addRow(row2Builder)
+        verify(listBuilder).addRow(row3Builder)
     }
 
     @Test
@@ -66,7 +88,7 @@ class SliceProviderViewTest {
         val action = Mockito.mock(SliceAction::class.java)
 
         /* When onBindSlice*/
-        val result = viewUnderTest.onBindSlice(uri, action, icon)
+        val result = viewUnderTest.onBindSlice(uri, action)
 
         /* Then null*/
         assertEquals(null, result)

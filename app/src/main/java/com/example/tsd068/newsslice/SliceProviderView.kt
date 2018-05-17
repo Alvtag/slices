@@ -5,9 +5,7 @@ import android.content.Context
 import androidx.slice.Slice
 import androidx.slice.builders.SliceAction
 import android.net.Uri
-import androidx.core.graphics.drawable.IconCompat
 import androidx.slice.core.SliceHints
-import com.example.tsd068.Logg
 import com.example.tsd068.model.NewsStory
 
 
@@ -27,45 +25,40 @@ class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
     }
 
     fun updateStoryList(  freshNewsList: List<NewsStory> ) {
-        Logg.instance.d("ALVTAG", "SliceProviderView.updateStoryList")
         newsList = freshNewsList
         val context = sliceProviderInterface.context()
         // Should notify the URI to let any slices that might be displaying know to update.
         val uri = getUri(context, "/topnews", sliceProviderInterface.uriBuilder())
 
         context.contentResolver.notifyChange(uri, null)
-
     }
 
     //take in a uri and returns a slice. or null.
-    fun onBindSlice(sliceUri: Uri, sliceAction: SliceAction, icon: IconCompat): Slice? {
-        Logg.instance.d("ALVTAG", "sliceUri.path:" + sliceUri.path)
-        Logg.instance.d("ALVTAG", "onBindSlice articles size:" + newsList?.size?:"empty")
+    fun onBindSlice(sliceUri: Uri, sliceAction: SliceAction): Slice? {
+        System.out.println(sliceUri.path);
         when (sliceUri.path) {
             "/topnews" -> {
-
-                //newsList.get()
+                System.out.println(newsList);
                 val listBuilder = sliceProviderInterface.listBuilder(sliceUri)
 
                 val titleRowBuilder = sliceProviderInterface.rowBuilder(listBuilder)
-                titleRowBuilder.setTitleItem(icon, SliceHints.ICON_IMAGE)
-                titleRowBuilder.setTitle("ABC News+"+System.currentTimeMillis())
+                titleRowBuilder.addEndItem(sliceProviderInterface.appIcon(), SliceHints.ICON_IMAGE, false)
+                titleRowBuilder.setTitle("ABC News")
                 titleRowBuilder.setPrimaryAction(sliceAction)
                 listBuilder.addRow(titleRowBuilder)
 
+                newsList?.let {
+                    it.forEach {
+                        val itemRowBuilder = sliceProviderInterface.rowBuilder(listBuilder)
+                        itemRowBuilder.setTitleItem(sliceProviderInterface.rowIcon(), SliceHints.SMALL_IMAGE)
+                        itemRowBuilder.setTitle(it.title)
+                        itemRowBuilder.setSubtitle(it.description)
+                        listBuilder.addRow(itemRowBuilder)
+                    }
+                }
 
-                val itemRowBuilder = sliceProviderInterface.rowBuilder(listBuilder)
-                itemRowBuilder.setTitleItem(icon, SliceHints.ICON_IMAGE)
-                itemRowBuilder.setTitle("Foo Story")
-                itemRowBuilder.setSubtitle("Description lorem ipsum dolor...")
-                listBuilder.addRow(itemRowBuilder)
-
-                val slice = listBuilder.build()
-                Logg.instance.d("ALVTAG", "getting articles")
                 presenter.fetchArticles()
-
-                // Build the slice
-                return slice
+                return listBuilder.build()
             }
         }
         return null

@@ -5,7 +5,7 @@ package com.example.tsd068
  */
 class Constants {
     companion object {
-        const val UriString = "content://com.example.tsd068.newsslice/topnews"
+        const val UriString = "content://com.tribalscale.newsslice/topnews"
         const val newsApiKey = "11c1e3ef064e4159822b5e44650815c1"
     }
 }

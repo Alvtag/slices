@@ -31,8 +31,7 @@ class SliceProvider : SliceProvider(), SliceProviderInterface {
             val openTempActivity = SliceAction(pendingIntent,
                     IconCompat.createWithResource(context, android.R.drawable.btn_default),
                     "Temperature controls")
-            val icon = IconCompat.createWithResource(context, R.drawable.newspaper_512)
-            return sliceProviderView.onBindSlice(sliceUri, openTempActivity, icon)!!
+            return sliceProviderView.onBindSlice(sliceUri, openTempActivity)!! //onBindSLice is nullable ooops TODO ALVTAG
         }
         throw IllegalArgumentException("sliceUri cannot be null!")
     }
@@ -53,12 +52,12 @@ class SliceProvider : SliceProvider(), SliceProviderInterface {
         return context
     }
 
-     fun getChangeTempIntent(value: Int): PendingIntent {
-        val intent = Intent(MyBroadcastReceiver.ACTION_CHANGE_TEMP)
-        intent.setClass(context, MyBroadcastReceiver::class.java)
-        intent.putExtra(MyBroadcastReceiver.EXTRA_TEMP_VALUE, value)
-        return PendingIntent.getBroadcast(context,0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT)
+    override fun appIcon(): IconCompat {
+        return IconCompat.createWithResource(context, R.drawable.abc)
+    }
+
+    override fun rowIcon(): IconCompat {
+        return IconCompat.createWithResource(context, R.drawable.newspaper_512)
     }
 
 }
