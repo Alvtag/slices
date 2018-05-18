@@ -3,7 +3,6 @@ package com.example.tsd068.newsslice
 import android.content.ContentResolver
 import android.content.Context
 import androidx.slice.Slice
-import androidx.slice.builders.SliceAction
 import android.net.Uri
 import androidx.slice.core.SliceHints
 import com.example.tsd068.model.NewsStory
@@ -34,7 +33,7 @@ class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
     }
 
     //take in a uri and returns a slice. or null.
-    fun onBindSlice(sliceUri: Uri, sliceAction: SliceAction): Slice? {
+    fun onBindSlice(sliceUri: Uri): Slice? {
         when (sliceUri.path) {
             "/topnews" -> {
                 System.out.println(newsList);
@@ -43,7 +42,7 @@ class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
                 val titleRowBuilder = sliceProviderInterface.rowBuilder(listBuilder)
                 titleRowBuilder.addEndItem(sliceProviderInterface.appIcon(), SliceHints.SMALL_IMAGE)
                 titleRowBuilder.setTitle("ABC News")
-                titleRowBuilder.setPrimaryAction(sliceAction)
+                titleRowBuilder.setPrimaryAction(sliceProviderInterface.appAction())
                 listBuilder.addRow(titleRowBuilder)
 
                 newsList?.let {
@@ -52,6 +51,7 @@ class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
                         itemRowBuilder.setTitleItem(sliceProviderInterface.rowIcon(), SliceHints.SMALL_IMAGE)
                         itemRowBuilder.setTitle(it.title)
                         itemRowBuilder.setSubtitle(it.description)
+                        itemRowBuilder.setPrimaryAction(sliceProviderInterface.storyAction(it.url))
                         listBuilder.addRow(itemRowBuilder)
                     }
                 }

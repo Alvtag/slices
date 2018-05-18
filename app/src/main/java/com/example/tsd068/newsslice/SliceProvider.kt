@@ -20,15 +20,8 @@ class SliceProvider : SliceProvider(), SliceProviderInterface {
 
     override fun onBindSlice(sliceUri: Uri?): Slice {
         sliceUri?.let {
-            // Set the primary action; this will activate when the row is tapped
-            val intent = Intent(context, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(context,
-                    sliceUri.hashCode(),
-                    intent, 0)
-            val openTempActivity = SliceAction(pendingIntent,
-                    IconCompat.createWithResource(context, android.R.drawable.btn_default),
-                    "Temperature controls")
-            return sliceProviderView.onBindSlice(sliceUri, openTempActivity)!!
+
+            return sliceProviderView.onBindSlice(sliceUri)!!
         }
         throw IllegalArgumentException("sliceUri cannot be null!")
     }
@@ -57,4 +50,27 @@ class SliceProvider : SliceProvider(), SliceProviderInterface {
         return IconCompat.createWithResource(context, R.drawable.newspaper_512)
     }
 
+    override fun appAction(): SliceAction {
+        // Set the primary action; this will activate when the row is tapped
+        val intent = Intent(context, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        val action = SliceAction(
+                pendingIntent,
+                IconCompat.createWithResource(context, android.R.drawable.btn_default),
+                "Regular App")
+        return action
+    }
+
+    override fun storyAction(url: String): SliceAction {
+        val intent = Intent(context, MainActivity::class.java)
+        intent.putExtra("url", url)
+        val pendingIntent = PendingIntent.getActivity(context,
+                url.hashCode(),
+                intent, 0)
+        val action = SliceAction(
+                pendingIntent,
+                IconCompat.createWithResource(context, android.R.drawable.btn_default),
+                "story App")
+        return action
+    }
 }

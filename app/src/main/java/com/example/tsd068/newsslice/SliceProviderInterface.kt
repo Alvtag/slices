@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.graphics.drawable.IconCompat
 import androidx.slice.builders.ListBuilder
+import androidx.slice.builders.SliceAction
 
 /**
  * Created by tsd068 on 2018-05-15.
@@ -20,4 +21,8 @@ interface SliceProviderInterface {
     fun appIcon():IconCompat
 
     fun rowIcon():IconCompat
+
+    fun appAction():SliceAction
+
+    fun storyAction(url:String):SliceAction
 }

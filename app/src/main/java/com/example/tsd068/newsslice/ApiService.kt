@@ -12,7 +12,7 @@ import retrofit2.http.Query;
 interface ApiService {
 
     @GET("top-headlines")
-    fun search(@Query("country")query: String = "ca",
+    fun search(@Query("sources")query: String = "abc-news",
                @Query("pagesize")page: Int = 3,
                @Query("apiKey")apikey: String = Constants.newsApiKey ): Observable<Result>
 

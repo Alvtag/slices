@@ -3,10 +3,8 @@ package com.example.tsd068.newsslice
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import androidx.core.graphics.drawable.IconCompat
 import androidx.slice.Slice
 import androidx.slice.builders.ListBuilder
-import androidx.slice.builders.SliceAction
 import com.example.tsd068.Logg
 import com.example.tsd068.model.NewsStory
 import org.junit.Test
@@ -16,11 +14,10 @@ import org.junit.Before
 import org.mockito.Mockito
 import org.mockito.Mockito.*
 
+@Suppress("MemberVisibilityCanPrivate", "HasPlatformType", "FunctionName")
 class SliceProviderViewTest {
     val slice = Mockito.mock(Slice::class.java)
     val newsSliceProviderInterface = Mockito.mock(SliceProviderInterface::class.java)
-    val icon = Mockito.mock(IconCompat::class.java)
-    val action = Mockito.mock(SliceAction::class.java)
     val listBuilder = Mockito.mock(ListBuilder::class.java)
     val rowBuilder = Mockito.mock(ListBuilder.RowBuilder::class.java)
     val context = Mockito.mock(Context::class.java)
@@ -71,7 +68,7 @@ class SliceProviderViewTest {
         `when`(listBuilder.build()).thenReturn(slice)
 
         /* When null*/
-        val result = viewUnderTest.onBindSlice(uri, action)
+        val result = viewUnderTest.onBindSlice(uri)
 
         /* Then gimme a slice*/
         assertEquals(slice, result)
@@ -81,14 +78,13 @@ class SliceProviderViewTest {
         verify(listBuilder).addRow(row3Builder)
     }
 
-    @Test
-    fun onBindSlice_badpath() {
+    @Test(expected = IllegalArgumentException::class)
+    fun onBindSlice_badPath() {
         /* Given a bad path*/
         `when`(uri.path).then { "/temperature" }
-        val action = Mockito.mock(SliceAction::class.java)
 
         /* When onBindSlice*/
-        val result = viewUnderTest.onBindSlice(uri, action)
+        val result = viewUnderTest.onBindSlice(uri)
 
         /* Then null*/
         assertEquals(null, result)

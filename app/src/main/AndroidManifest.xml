@@ -19,7 +19,7 @@
         </activity>
 
         <provider
-            android:authorities="com.tribalscale.newsslice"
+            android:authorities="com.example.tsd068.newsslice"
             android:name=".SliceProvider"
             android:exported="true">
         </provider>
