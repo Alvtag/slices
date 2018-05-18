@@ -35,14 +35,13 @@ class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
 
     //take in a uri and returns a slice. or null.
     fun onBindSlice(sliceUri: Uri, sliceAction: SliceAction): Slice? {
-        System.out.println(sliceUri.path);
         when (sliceUri.path) {
             "/topnews" -> {
                 System.out.println(newsList);
                 val listBuilder = sliceProviderInterface.listBuilder(sliceUri)
 
                 val titleRowBuilder = sliceProviderInterface.rowBuilder(listBuilder)
-                titleRowBuilder.addEndItem(sliceProviderInterface.appIcon(), SliceHints.ICON_IMAGE, false)
+                titleRowBuilder.addEndItem(sliceProviderInterface.appIcon(), SliceHints.SMALL_IMAGE)
                 titleRowBuilder.setTitle("ABC News")
                 titleRowBuilder.setPrimaryAction(sliceAction)
                 listBuilder.addRow(titleRowBuilder)
@@ -61,6 +60,6 @@ class SliceProviderView(val sliceProviderInterface: SliceProviderInterface) {
                 return listBuilder.build()
             }
         }
-        return null
+        throw IllegalArgumentException("${sliceUri.path} is not a recognized path!")
     }
 }

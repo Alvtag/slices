@@ -9,29 +9,26 @@ import androidx.slice.builders.SliceAction
 import android.net.Uri
 import android.content.Intent
 import androidx.core.graphics.drawable.IconCompat
-import com.example.tsd068.Logg
 import com.example.tsd068.MainActivity
 
 class SliceProvider : SliceProvider(), SliceProviderInterface {
 
-    val sliceProviderView = SliceProviderView(this)
+    private val sliceProviderView = SliceProviderView(this)
     override fun onCreateSliceProvider(): Boolean {
         return true
     }
 
     override fun onBindSlice(sliceUri: Uri?): Slice {
-        Logg.instance.d("ALVTAG", "SliceProvider onBindSlice")
-        Logg.instance.d("ALVTAG", "SliceProvider : sliceUri.path:" + sliceUri?.path)
         sliceUri?.let {
             // Set the primary action; this will activate when the row is tapped
             val intent = Intent(context, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(getContext(),
+            val pendingIntent = PendingIntent.getActivity(context,
                     sliceUri.hashCode(),
                     intent, 0)
             val openTempActivity = SliceAction(pendingIntent,
                     IconCompat.createWithResource(context, android.R.drawable.btn_default),
                     "Temperature controls")
-            return sliceProviderView.onBindSlice(sliceUri, openTempActivity)!! //onBindSLice is nullable ooops TODO ALVTAG
+            return sliceProviderView.onBindSlice(sliceUri, openTempActivity)!!
         }
         throw IllegalArgumentException("sliceUri cannot be null!")
     }
